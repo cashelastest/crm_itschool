@@ -1,0 +1,99 @@
+{% extends 'school/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{%static 'css/styles.css'%}">
+<style>
+    /* Убираем отступы у событий календаря */
+
+  </style>
+<div id='calendar'></div>
+<div id='popup' style='display:none; position:absolute; background:white; border:1px solid #ccc; padding:10px; z-index:1000;'>
+    <h3>Добавить урок</h3>
+    <p id='selectedDate'></p>
+    <input type='text' id='lessonTitle' placeholder='Название урока'>
+    <input type='color' id='lessonColor' value='#3788d8'>
+    <button onclick='addLesson()'>Добавить</button>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var popup = document.getElementById('popup');
+    var selectedDateEl = document.getElementById('selectedDate');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        slotDuration: '00:10:00',
+        slotLabelInterval: '01:00',
+        slotMinTime: '08:00:00',
+        slotMaxTime: '20:00:00',
+        allDaySlot: false,
+        weekends: true,
+        nowIndicator: true,
+        height: 'auto',
+        locale: 'uk',
+        events: '/api/events/', // URL для получения событий от Django
+        slotEventOverlap: false, // Блоки уроков на всю ширину дня
+        eventContent: function(arg) {
+            return {
+                
+                html: `<div background-color = ${arg.event.color}>
+                    <b><br>${arg.event.title}
+                        </b>
+                        <br><br>
+                        <i>Викладач: ${arg.event.extendedProps.teacher}</i><br><br>
+                        <i>Домашнє завдання: ${arg.event.extendedProps.homework}</i>
+                    </div>`
+                // `<div background-color = ${arg.event.color}>`+'<b>' + arg.event.title + '</b><br>' +
+                //       '<i>' + arg.event.extendedProps.homework + '</i>'+'</div>'
+            };
+        },
+        eventClick: function(info) {
+            alert('Урок: ' + info.event.title + '\nОписание: ' + info.event.extendedProps.homework);
+        },
+        dateClick: function(info) {
+            var rect = calendarEl.getBoundingClientRect();
+            popup.style.display = 'block';
+            popup.style.left = (info.jsEvent.clientX - rect.left) + 'px';
+            popup.style.top = (info.jsEvent.clientY - rect.top) + 'px';
+            selectedDateEl.textContent = 'Выбранная дата: ' + info.dateStr;
+        }
+    });
+    calendar.render();
+
+    document.addEventListener('click', function(e) {
+        if (!popup.contains(e.target) && e.target !== popup) {
+            popup.style.display = 'none';
+        }
+    });
+});
+
+function addLesson() {
+    var title = document.getElementById('lessonTitle').value;
+    var color = document.getElementById('lessonColor').value;
+    var date = document.getElementById('selectedDate').textContent.split(': ')[1];
+    
+    // Здесь можно добавить код для отправки данных на сервер
+    console.log('Добавление урока:', title, 'на дату', date, 'с цветом', color);
+    
+    // Добавление события в календарь (для демонстрации)
+    var calendarApi = calendar.getApi();
+    calendarApi.addEvent({
+        title: title,
+        start: date,
+        end: date,
+        color: color,
+        extendedProps: {
+            description: 'Описание урока'
+        }
+    });
+
+    // Очистка и закрытие попапа
+    document.getElementById('lessonTitle').value = '';
+    document.getElementById('popup').style.display = 'none';
+}
+</script>
+{% endblock %}

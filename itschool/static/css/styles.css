@@ -1,0 +1,187 @@
+.fc-direction-ltr{
+    text-align: center;
+}
+.fc-timegrid-event-harness {
+    margin: 0 !important;
+  }
+  .fc-timegrid-event {
+    margin: 0 !important;
+    border: none !important;
+  }
+  /* Убираем границы у ячеек, чтобы события были вплотную */
+  .fc-timegrid-col-events {
+    margin: 0 !important;
+    position: relative;
+  }
+  
+ /* Переменные с цветами компании */
+:root {
+    --color-primary: #1E3A8A;    /* Глубокий синий */
+    --color-secondary: #06B6D4;  /* Яркий бирюзовый */
+    --color-accent: #F97316;     /* Насыщенный оранжевый */
+    --color-neutral: #F3F4F6;    /* Светло-серый */
+    --color-text: #1F2937;       /* Темно-серый */
+}
+
+/* Контейнер формы */
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--color-neutral);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок формы */
+.form-title {
+    color: var(--color-primary);
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Группа формы */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Метки полей */
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+/* Базовые стили для всех input полей */
+.form-input {
+    width: 95%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    color: var(--color-text);
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+/* Текстовая область */
+.form-textarea {
+    width: 95%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+/* Select поля */
+.form-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+/* Multiple select */
+.form-multiselect {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-height: 120px;
+}
+
+/* Кнопка отправки */
+.form-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-submit:hover {
+    background-color: #152b63;
+}
+
+.form-submit:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.2);
+}
+
+/* Сообщения об ошибках */
+.form-error {
+    color: var(--color-accent);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* Disabled состояние */
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+    background-color: var(--color-neutral);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Состояние валидации */
+.form-input.is-valid {
+    border-color: #22c55e;
+}
+
+.form-input.is-invalid {
+    border-color: var(--color-accent);
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 768px) {
+    .form-container {
+        max-width: 95%;
+        margin: 10px;
+    }
+}
+
+/* Стили для datetime-local input */
+input[type="datetime-local"].form-input {
+    padding: 9px 12px;
+}
+
+/* Чекбоксы и радио кнопки */
+.form-checkbox,
+.form-radio {
+    margin-right: 8px;
+}
+
+.form-checkbox-label,
+.form-radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
