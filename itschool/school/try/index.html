@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Створення абонементу</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2>Створення абонементу</h2>
+        
+        <form id="packForm">
+            <div class="pack-details">
+                <div class="form-group">
+                    <label>Назва</label>
+                    <input type="text" name="name" required>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Кількість уроків</label>
+                        <input type="number" name="lessonsNumber" required min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Термін дії (днів)</label>
+                        <input type="number" name="validityPeriod" required min="1">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Ціна</label>
+                    <input type="number" name="price" required min="0" step="0.01">
+                </div>
+            </div>
+
+            <div class="schedules-section">
+                <div class="schedules-header">
+                    <h3>Розклад занять</h3>
+                    <button type="button" id="addScheduleBtn" class="add-schedule-btn">
+                        <i class="fas fa-plus"></i>
+                        Додати розклад
+                    </button>
+                </div>
+
+                <div id="schedulesContainer"></div>
+            </div>
+
+            <button type="submit" class="submit-btn">Зберегти абонемент</button>
+        </form>
+    </div>
+
+    <template id="scheduleTemplate">
+        <div class="schedule-item">
+            <div class="schedule-grid">
+                <div class="form-group">
+                    <label>День тижня</label>
+                    <select name="dayOfWeek" required>
+                        <option value="">Оберіть день</option>
+                        <option value="0">Понеділок</option>
+                        <option value="1">Вівторок</option>
+                        <option value="2">Середа</option>
+                        <option value="3">Четвер</option>
+                        <option value="4">П'ятниця</option>
+                        <option value="5">Субота</option>
+                        <option value="6">Неділя</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Час початку</label>
+                    <input type="time" name="startTime" required>
+                </div>
+                
+                <div class="form-group time-group">
+                    <label>Час закінчення</label>
+                    <input type="time" name="endTime" required>
+                </div>
+            </div>
+            <button type="button" class="delete-schedule-btn">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+</body>
+</html>

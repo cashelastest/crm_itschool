@@ -1,6 +1,6 @@
 from django import forms
-from .models import Pack, Course, Student, Teacher, Profile, Lesson
-
+from .models import *
+from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, Profile 
 class CustomFormMixin:
@@ -18,22 +18,31 @@ class UserRegistrationForm(CustomFormMixin, UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
-class PackForm(CustomFormMixin, forms.ModelForm):
+class ScheduleForm(forms.ModelForm):
+    class Meta:
+        model = Schedule
+        fields = ['day_of_week', 'start_time', 'end_time']
+        widgets = {
+            'start_time': forms.TimeInput(attrs={'type': 'time'}),
+            'end_time': forms.TimeInput(attrs={'type': 'time'})
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        print(cleaned_data)
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
+        
+        if start_time and end_time and start_time >= end_time:
+            raise forms.ValidationError("Час початку заняття повинен бути раніше часу закінчення")
+        return cleaned_data
+
+class PackForm(forms.ModelForm):
     class Meta:
         model = Pack
-        fields = ['name', 'lessons_number', 'price']
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'placeholder': 'Введіть назву пакету'
-            }),
-            'lessons_number': forms.NumberInput(attrs={
-                'min': '1'
-            }),
-            'price': forms.NumberInput(attrs={
-                'min': '0',
-                'step': '0.01'
-            })
-        }
+        fields = ['name', 'lessons_number', 'validity_period', 'price', 'course']
+
+
 
 class CourseForm(CustomFormMixin, forms.ModelForm):
     class Meta:

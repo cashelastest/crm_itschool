@@ -1,0 +1,19 @@
+{%extends "school/base.html"%}
+{%block content%}
+name^
+{{student.user.first_name}}
+<form method="post">
+    {%csrf_token%}
+<label for="pack">Оберіть абонемент</label>
+<select id="pack" name="pack">
+{%for pack in packs%}
+
+    <option value="{{pack.pk}}">{{pack.name}}</option>
+
+
+{%endfor%}
+</select>
+<button id = 'send' type="submit">Сплатити абонемент</button>
+</form>
+{%endblock%}
+

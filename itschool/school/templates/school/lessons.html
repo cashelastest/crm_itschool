@@ -7,18 +7,20 @@
 
   </style>
 <div id='calendar'></div>
-<div id='popup' style='display:none; position:absolute; background:white; border:1px solid #ccc; padding:10px; z-index:1000;'>
-    <h3>Добавить урок</h3>
+<div id='popup' style='display:none; position:absolute; background:white; border:1px solid #ccc; padding:10px; z-index:1000;color: black;'>
+    <h3>confirm lesson</h3>
     <p id='selectedDate'></p>
-    <input type='text' id='lessonTitle' placeholder='Название урока'>
-    <input type='color' id='lessonColor' value='#3788d8'>
-    <button onclick='addLesson()'>Добавить</button>
+    <p id = 'info'></p>
+    <button id ='confirmation' onclick='confirmLesson()'>Заняття відбулося</button>
 </div>
 <script>
+
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var popup = document.getElementById('popup');
     var selectedDateEl = document.getElementById('selectedDate');
+    var infoBlock = document.getElementById('info');
+    var confirmation = document.getElementById('confirmation');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
         headerToolbar: {
@@ -38,23 +40,48 @@ document.addEventListener('DOMContentLoaded', function() {
         events: '/api/events/', // URL для получения событий от Django
         slotEventOverlap: false, // Блоки уроков на всю ширину дня
         eventContent: function(arg) {
+            id = arg.event.id;
+            title = arg.event.title;
+            teacher = arg.event.extendedProps.teacher;
+            student = arg.event.extendedProps.student;
+            isConfirmed = arg.event.extendedProps.isConfirmed;
             return {
                 
                 html: `<div background-color = ${arg.event.color}>
-                    <b><br>${arg.event.title}
+                    <b><br>${title}
                         </b>
                         <br><br>
-                        <i>Викладач: ${arg.event.extendedProps.teacher}</i><br><br>
-                        <i>Домашнє завдання: ${arg.event.extendedProps.homework}</i>
+                        <i>Викладач: ${teacher}</i><br><br>
+                        <i>Учень: ${student}</i>
                     </div>`
                 // `<div background-color = ${arg.event.color}>`+'<b>' + arg.event.title + '</b><br>' +
                 //       '<i>' + arg.event.extendedProps.homework + '</i>'+'</div>'
             };
         },
         eventClick: function(info) {
-            alert('Урок: ' + info.event.title + '\nОписание: ' + info.event.extendedProps.homework);
+            info.jsEvent.stopPropagation();
+            console.log(info.event._def.extendedProps.isConfirmed);
+            isConfirmed = info.event._def.extendedProps.isConfirmed;
+            id = info.event._def.publicId;
+            console.log(id);
+            console.log(info.event._def.publicId);
+
+            var rect = calendarEl.getBoundingClientRect();
+            if (isConfirmed === "True"){
+            console.log('works')
+            confirmation.style.display = 'none';
+            }else{
+                confirmation.style.display = 'block';
+            }
+            console.log(isConfirmed);
+            popup.style.display = 'block';
+            popup.style.left = (info.jsEvent.clientX - rect.left) + 'px';
+            popup.style.top = (info.jsEvent.clientY - rect.top) + 'px';
+            infoBlock.textContent = `${title}`;
+            
         },
         dateClick: function(info) {
+            info.jsEvent.stopPropagation();
             var rect = calendarEl.getBoundingClientRect();
             popup.style.display = 'block';
             popup.style.left = (info.jsEvent.clientX - rect.left) + 'px';
@@ -70,6 +97,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function confirmLesson(){
+
+    fetch('/lesson/confirm/', {
+            method: 'POST',
+            body: JSON.stringify({
+                data: id
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+    if (data.redirect) {
+        window.location.href = data.redirect;  // Redirect to the provided URL
+    } else if (data.error) {
+        console.error('Error:', data.error);  // Handle errors
+    }
+})
+        .catch(error => console.error('Error:', error));
+    
+}
 
 function addLesson() {
     var title = document.getElementById('lessonTitle').value;
